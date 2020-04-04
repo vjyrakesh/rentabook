@@ -1,7 +1,8 @@
 ### Rent-a-book
 
-- Rent a book is a service which lends books to customers for a specific period of time.
-- There can be multiple branches for this service.
+Rent a book is a service which lends books to customers for a specific period of time.
+
+- There can be multiple branches for this business.
 - Every branch will have a branch admin.
 - Each branch has a collection of books to lend.
 - Customer should be able to 
