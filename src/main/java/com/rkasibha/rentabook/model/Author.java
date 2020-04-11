@@ -1,6 +1,7 @@
 package com.rkasibha.rentabook.model;
 
 import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
+import com.rkasibha.rentabook.annotation.CountryConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ public class Author {
     @EmailIdConstraint
     private String emailId;
 
+    @CountryConstraint
     private String country;
 
     public Author() {}

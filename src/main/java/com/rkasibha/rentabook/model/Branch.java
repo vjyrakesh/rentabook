@@ -1,5 +1,6 @@
 package com.rkasibha.rentabook.model;
 
+import com.rkasibha.rentabook.annotation.CityConstraint;
 import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
@@ -27,6 +28,10 @@ public class Branch {
     @NotNull
     @EmailIdConstraint
     private String emailId;
+
+    @NotNull
+    @CityConstraint
+    private String city;
 
     public Branch() {}
 
@@ -62,6 +67,14 @@ public class Branch {
         this.emailId = emailId;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     @Override
     public String toString() {
         return "Branch{" +
@@ -69,6 +82,7 @@ public class Branch {
                 ", branchName='" + branchName + '\'' +
                 ", contactNumber='" + contactNumber + '\'' +
                 ", emailId='" + emailId + '\'' +
+                ", city='" + city + '\'' +
                 '}';
     }
 }
