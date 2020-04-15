@@ -3,11 +3,9 @@ package com.rkasibha.rentabook.model;
 import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 public class Publisher {
@@ -28,6 +26,9 @@ public class Publisher {
     @NotNull
     @EmailIdConstraint
     private String emailId;
+
+    @OneToMany(mappedBy = "publisher")
+    private List<Book> publishedBooks;
 
     public Publisher() {}
 

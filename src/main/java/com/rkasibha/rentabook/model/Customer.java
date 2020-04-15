@@ -5,11 +5,9 @@ import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
 import com.rkasibha.rentabook.annotation.CountryConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 public class Customer {
@@ -38,6 +36,9 @@ public class Customer {
     @NotNull
     @CountryConstraint
     private String country;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Membership> memberships;
 
 
     public Customer() {}

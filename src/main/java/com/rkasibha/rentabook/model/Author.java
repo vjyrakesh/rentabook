@@ -4,11 +4,9 @@ import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
 import com.rkasibha.rentabook.annotation.CountryConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 public class Author {
@@ -33,6 +31,9 @@ public class Author {
 
     @CountryConstraint
     private String country;
+
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
+    private Set<Book> books;
 
     public Author() {}
 

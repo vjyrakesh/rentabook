@@ -18,4 +18,10 @@ public class Membership {
 
     @Enumerated(EnumType.STRING)
     private MembershipStatus status;
+
+    @ManyToOne
+    private Branch branch;
+
+    @ManyToOne
+    private Customer customer;
 }

@@ -4,12 +4,12 @@ import com.rkasibha.rentabook.annotation.CityConstraint;
 import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NegativeOrZero;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Branch {
@@ -32,6 +32,15 @@ public class Branch {
     @NotNull
     @CityConstraint
     private String city;
+
+    @OneToMany(mappedBy = "branch")
+    private List<Membership> memberships;
+
+    @OneToOne
+    private BranchAdmin admin;
+
+    @OneToMany(mappedBy = "branch", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<BranchBook> catalog = new HashSet<>();
 
     public Branch() {}
 
@@ -75,14 +84,28 @@ public class Branch {
         this.city = city;
     }
 
-    @Override
-    public String toString() {
-        return "Branch{" +
-                "id=" + id +
-                ", branchName='" + branchName + '\'' +
-                ", contactNumber='" + contactNumber + '\'' +
-                ", emailId='" + emailId + '\'' +
-                ", city='" + city + '\'' +
-                '}';
+
+    public List<Membership> getMemberships() {
+        return memberships;
+    }
+
+    public void setMemberships(List<Membership> memberships) {
+        this.memberships = memberships;
+    }
+
+    public BranchAdmin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(BranchAdmin admin) {
+        this.admin = admin;
+    }
+
+    public Set<BranchBook> getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(Set<BranchBook> catalog) {
+        this.catalog = catalog;
     }
 }
