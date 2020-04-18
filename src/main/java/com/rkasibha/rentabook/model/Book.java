@@ -28,6 +28,9 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<BranchBook> catalog = new HashSet<>();
 
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<BookBranchCustomer> allocations = new HashSet<>();
+
     public Book() {}
 
     public Integer getId() {
@@ -76,6 +79,14 @@ public class Book {
 
     public void setCatalog(Set<BranchBook> catalog) {
         this.catalog = catalog;
+    }
+
+    public Set<BookBranchCustomer> getAllocations() {
+        return allocations;
+    }
+
+    public void setAllocations(Set<BookBranchCustomer> allocations) {
+        this.allocations = allocations;
     }
 
     @Override

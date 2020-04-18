@@ -7,7 +7,9 @@ import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Customer {
@@ -39,6 +41,9 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private List<Membership> memberships;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<BookBranchCustomer> allocations = new HashSet<>();
 
 
     public Customer() {}
@@ -97,6 +102,22 @@ public class Customer {
 
     public void setEmailId(String emailId) {
         this.emailId = emailId;
+    }
+
+    public List<Membership> getMemberships() {
+        return memberships;
+    }
+
+    public void setMemberships(List<Membership> memberships) {
+        this.memberships = memberships;
+    }
+
+    public Set<BookBranchCustomer> getAllocations() {
+        return allocations;
+    }
+
+    public void setAllocations(Set<BookBranchCustomer> allocations) {
+        this.allocations = allocations;
     }
 
     @Override
