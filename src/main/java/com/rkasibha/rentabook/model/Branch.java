@@ -7,6 +7,7 @@ import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 import javax.persistence.*;
 import javax.validation.constraints.NegativeOrZero;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class Branch {
     private String city;
 
     @OneToMany(mappedBy = "branch")
-    private List<Membership> memberships;
+    private List<Membership> memberships = new ArrayList<>();
 
     @OneToOne
     private BranchAdmin admin;

@@ -1,31 +1,18 @@
-package com.rkasibha.rentabook.model;
+package com.rkasibha.rentabook.dto;
 
 import com.rkasibha.rentabook.enumeration.MembershipStatus;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Entity
-public class Membership {
+public class MembershipDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @NotNull
     private LocalDate memberSince;
-
-    @Enumerated(EnumType.STRING)
     private MembershipStatus status;
+    private BranchBasicInfoDto branch;
+    private CustomerBasicInfoDto customer;
 
-    @ManyToOne
-    private Branch branch;
-
-    @ManyToOne
-    private Customer customer;
-
-    public Membership() {
+    public MembershipDto() {
     }
 
     public Integer getId() {
@@ -52,19 +39,19 @@ public class Membership {
         this.status = status;
     }
 
-    public Branch getBranch() {
+    public BranchBasicInfoDto getBranch() {
         return branch;
     }
 
-    public void setBranch(Branch branch) {
+    public void setBranch(BranchBasicInfoDto branch) {
         this.branch = branch;
     }
 
-    public Customer getCustomer() {
+    public CustomerBasicInfoDto getCustomer() {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
+    public void setCustomer(CustomerBasicInfoDto customer) {
         this.customer = customer;
     }
 }
