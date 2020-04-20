@@ -2,6 +2,7 @@ package com.rkasibha.rentabook.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,16 +18,16 @@ public class Book {
     private String title;
 
     @OneToMany(mappedBy = "book")
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @ManyToOne
     private Publisher publisher;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<BranchBook> catalog = new HashSet<>();
+    private Set<BranchBook> availability = new HashSet<>();
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<BookBranchCustomer> allocations = new HashSet<>();
@@ -73,12 +74,12 @@ public class Book {
         this.authors = authors;
     }
 
-    public Set<BranchBook> getCatalog() {
-        return catalog;
+    public Set<BranchBook> getAvailability() {
+        return availability;
     }
 
-    public void setCatalog(Set<BranchBook> catalog) {
-        this.catalog = catalog;
+    public void setAvailability(Set<BranchBook> availability) {
+        this.availability = availability;
     }
 
     public Set<BookBranchCustomer> getAllocations() {
