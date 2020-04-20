@@ -5,6 +5,7 @@ import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,7 +29,7 @@ public class Publisher {
     private String emailId;
 
     @OneToMany(mappedBy = "publisher")
-    private List<Book> publishedBooks;
+    private List<Book> publishedBooks = new ArrayList<>();
 
     public Publisher() {}
 
