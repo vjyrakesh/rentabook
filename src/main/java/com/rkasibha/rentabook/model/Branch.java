@@ -37,7 +37,7 @@ public class Branch {
     @OneToMany(mappedBy = "branch")
     private List<Membership> memberships = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private BranchAdmin admin;
 
     @OneToMany(mappedBy = "branch", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

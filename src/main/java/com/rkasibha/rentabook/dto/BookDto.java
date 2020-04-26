@@ -11,4 +11,38 @@ public class BookDto {
     private List<ReviewDto> reviews = new ArrayList<>();
     private Set<AuthorDto> authors = new HashSet<>();
 
+    public BookDto() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<ReviewDto> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewDto> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Set<AuthorDto> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<AuthorDto> authors) {
+        this.authors = authors;
+    }
 }

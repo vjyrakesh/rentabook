@@ -1,15 +1,12 @@
 package com.rkasibha.rentabook.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BranchDto {
     private Integer id;
     private String branchName;
     private String contactNumber;
     private String emailId;
     private String city;
-    private BranchAdminDto branchAdmin;
+    private BranchAdminDto admin;
 
     public BranchDto() {
     }
@@ -54,11 +51,11 @@ public class BranchDto {
         this.city = city;
     }
 
-    public BranchAdminDto getBranchAdmin() {
-        return branchAdmin;
+    public BranchAdminDto getAdmin() {
+        return admin;
     }
 
-    public void setBranchAdmin(BranchAdminDto branchAdmin) {
-        this.branchAdmin = branchAdmin;
+    public void setAdmin(BranchAdminDto admin) {
+        this.admin = admin;
     }
 }

@@ -14,6 +14,6 @@ public class ContactNumberValidator implements ConstraintValidator<ContactNumber
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return s.matches("^\\+[0-9]{5,15}$");
+        return s.matches("^\\+?[0-9]{5,15}$");
     }
 }
