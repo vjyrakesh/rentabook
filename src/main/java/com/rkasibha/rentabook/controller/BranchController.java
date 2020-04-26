@@ -7,10 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,5 +37,11 @@ public class BranchController {
         Branch branch = modelMapper.map(branchDto, Branch.class);
         Branch addedBranch = branchService.addBranch(branch);
         return new ResponseEntity<>(modelMapper.map(addedBranch, BranchDto.class), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<BranchDto> getBranchById(@PathVariable Integer id) {
+        BranchDto branchDto = modelMapper.map(branchService.getBranchById(id), BranchDto.class);
+        return new ResponseEntity<>(branchDto, HttpStatus.OK);
     }
 }

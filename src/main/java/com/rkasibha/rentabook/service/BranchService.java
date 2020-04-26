@@ -22,4 +22,8 @@ public class BranchService {
     public Branch addBranch(Branch branch) {
         return branchRepository.save(branch);
     }
+
+    public Branch getBranchById(Integer id) {
+        return branchRepository.findById(id).get();
+    }
 }
