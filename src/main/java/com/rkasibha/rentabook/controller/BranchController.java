@@ -24,7 +24,7 @@ public class BranchController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<BranchDto>> getAllBranches() {
-        List<Branch> branches = branchService.getAllBooks();
+        List<Branch> branches = branchService.getAllBranches();
         List<BranchDto> branchDtos = new ArrayList<>();
         for(Branch branch : branches) {
             branchDtos.add(modelMapper.map(branch, BranchDto.class));

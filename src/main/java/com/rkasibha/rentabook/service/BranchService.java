@@ -15,7 +15,7 @@ public class BranchService {
     @Autowired
     private BranchRepository branchRepository;
 
-    public List<Branch> getAllBooks() {
+    public List<Branch> getAllBranches() {
         return branchRepository.findAll();
     }
 
