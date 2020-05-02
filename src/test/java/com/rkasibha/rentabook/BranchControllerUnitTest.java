@@ -6,13 +6,13 @@ import com.rkasibha.rentabook.dto.BranchDto;
 import com.rkasibha.rentabook.model.Branch;
 import com.rkasibha.rentabook.service.BranchService;
 import net.minidev.json.JSONUtil;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,9 +28,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 @WebMvcTest(BranchController.class)
-public class BranchControllerUnitTests {
+public class BranchControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -83,7 +84,6 @@ public class BranchControllerUnitTests {
         String mockBranchDtoToAddStr = mapper.writeValueAsString(mockBranchDtoToAdd);
         System.out.println(mockBranchDtoToAddStr);
         mockMvc.perform(post("/branches").contentType(MediaType.APPLICATION_JSON).content(mockBranchDtoToAddStr))
-                .andDo(print())
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$.branchName").value("TestBranchObj"));
     }
