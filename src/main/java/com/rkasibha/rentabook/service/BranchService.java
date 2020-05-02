@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class BranchService {
 
-    @Autowired
+//    @Autowired
     private BranchRepository branchRepository;
+
+    public BranchService(BranchRepository branchRepository) {
+        this.branchRepository = branchRepository;
+    }
 
     public List<Branch> getAllBranches() {
         return branchRepository.findAll();
