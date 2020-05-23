@@ -1,5 +1,6 @@
 package com.rkasibha.rentabook.configuration;
 
+import com.rkasibha.rentabook.controller.EntityDtoMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,5 +11,10 @@ public class ModelMapperConfiguration {
     @Bean
     public ModelMapper createModelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public EntityDtoMapper createEntityDtoMapper() {
+        return new EntityDtoMapper();
     }
 }

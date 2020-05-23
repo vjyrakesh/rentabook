@@ -1,14 +1,13 @@
 package com.rkasibha.rentabook;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rkasibha.rentabook.controller.BookController;
+import com.rkasibha.rentabook.controller.EntityDtoMapper;
 import com.rkasibha.rentabook.dto.BookDto;
 import com.rkasibha.rentabook.model.Book;
 import com.rkasibha.rentabook.service.BookService;
-import com.rkasibha.rentabook.service.BranchService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @WebMvcTest(BookController.class)
 public class BookControllerUnitTest {
@@ -32,7 +32,7 @@ public class BookControllerUnitTest {
     private BookService bookService;
 
     @MockBean
-    private ModelMapper modelMapper;
+    private EntityDtoMapper entityDtoMapper;
 
     @Test
     public void testGetAllBooks() throws Exception {
@@ -40,10 +40,37 @@ public class BookControllerUnitTest {
         Mockito.when(bookService.getAllBooks()).thenReturn(books);
 
         BookDto mockBookDto = new BookDto();
-        Mockito.when(modelMapper.map(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any())).thenReturn(mockBookDto);
+        Mockito.when(entityDtoMapper.convertBookToBookDto(org.mockito.ArgumentMatchers.any())).thenReturn(mockBookDto);
 
         mockMvc.perform(get("/books").contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void testAddBook() throws Exception {
+        Book bookToAdd = new Book();
+        bookToAdd.setTitle("Test");
+
+        BookDto bookDtoToAdd = new BookDto();
+        bookDtoToAdd.setTitle("Test");
+
+        Book addedBook = new Book();
+        addedBook.setId(1);
+        addedBook.setTitle("Test");
+
+        BookDto returnedBookDto = new BookDto();
+        returnedBookDto.setId(1);
+        returnedBookDto.setTitle("Test");
+
+        Mockito.when(bookService.addBook(org.mockito.ArgumentMatchers.any())).thenReturn(addedBook);
+        Mockito.when(entityDtoMapper.convertBookDtoToBook(bookDtoToAdd)).thenReturn(bookToAdd);
+        Mockito.when(entityDtoMapper.convertBookToBookDto(addedBook)).thenReturn(returnedBookDto);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String mockBookDtoToAddStr = mapper.writeValueAsString(returnedBookDto);
+        mockMvc.perform(post("/books").contentType(MediaType.APPLICATION_JSON).content(mockBookDtoToAddStr))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
     }
 }

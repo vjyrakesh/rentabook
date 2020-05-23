@@ -32,4 +32,19 @@ public class BookServiceUnitTest {
         List<Book> books = bookService.getAllBooks();
         assertThat(books.size()).isEqualTo(0);
     }
+
+    @Test
+    public void testAddBook() {
+        Book bookToAdd = new Book();
+        bookToAdd.setTitle("Test Title");
+
+        Book addedBook = new Book();
+        addedBook.setId(1);
+        addedBook.setTitle("Test Title");
+
+        Mockito.when(bookRepository.save(bookToAdd)).thenReturn(addedBook);
+        Book returnedBook = bookService.addBook(bookToAdd);
+        assertThat(returnedBook.getId()).isEqualTo(1);
+        assertThat(returnedBook.getTitle()).isEqualTo("Test Title");
+    }
 }

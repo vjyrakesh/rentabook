@@ -23,4 +23,13 @@ public class BookService {
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
+
+    /**
+     * Add a book to the repository.
+     * @param book Book object to be added
+     * @return Book object added successfully
+     */
+    public Book addBook(Book book) {
+        return bookRepository.save(book);
+    }
 }
