@@ -47,4 +47,14 @@ public class BookServiceUnitTest {
         assertThat(returnedBook.getId()).isEqualTo(1);
         assertThat(returnedBook.getTitle()).isEqualTo("Test Title");
     }
+
+    @Test
+    public void testGetBookById() {
+        Book returnedBook = new Book();
+        returnedBook.setId(1);
+
+        Mockito.when(bookRepository.findById(1)).thenReturn(java.util.Optional.of(returnedBook));
+
+        assertThat(bookService.getBookById(1).getId()).isEqualTo(1);
+    }
 }

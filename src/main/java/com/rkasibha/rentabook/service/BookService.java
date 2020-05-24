@@ -32,4 +32,13 @@ public class BookService {
     public Book addBook(Book book) {
         return bookRepository.save(book);
     }
+
+    /**
+     * Get a book by id.
+     * @param id Id of the book to be retrieved
+     * @return Book object matching the id
+     */
+    public Book getBookById(Integer id) {
+        return bookRepository.findById(id).get();
+    }
 }

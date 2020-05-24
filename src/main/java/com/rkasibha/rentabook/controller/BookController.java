@@ -51,4 +51,15 @@ public class BookController {
         Book addedBook = bookService.addBook(entityDtoMapper.convertBookDtoToBook(bookDto));
         return new ResponseEntity<>(entityDtoMapper.convertBookToBookDto(addedBook), HttpStatus.CREATED);
     }
+
+    /**
+     * Get details of a book by its id.
+     * @param id ID of the book to be retrieved
+     * @return DTO of fetched Book object
+     */
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<BookDto> getBookById(@PathVariable Integer id) {
+        Book returnedBook = bookService.getBookById(id);
+        return new ResponseEntity<>(entityDtoMapper.convertBookToBookDto(returnedBook), HttpStatus.OK);
+    }
 }

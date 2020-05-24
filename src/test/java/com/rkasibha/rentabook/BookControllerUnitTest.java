@@ -73,4 +73,20 @@ public class BookControllerUnitTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
     }
+
+    @Test
+    public void testGetBookById() throws Exception {
+        Book returnedBook = new Book();
+        returnedBook.setId(1);
+
+        BookDto returnedBookDto = new BookDto();
+        returnedBookDto.setId(1);
+
+        Mockito.when(bookService.getBookById(1)).thenReturn(returnedBook);
+        Mockito.when(entityDtoMapper.convertBookToBookDto(returnedBook)).thenReturn(returnedBookDto);
+
+        mockMvc.perform(get("/books/1").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+    }
 }
