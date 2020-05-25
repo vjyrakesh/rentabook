@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rkasibha.rentabook.controller.BookController;
 import com.rkasibha.rentabook.controller.EntityDtoMapper;
 import com.rkasibha.rentabook.dto.BookDto;
+import com.rkasibha.rentabook.exception.DataNotFoundException;
 import com.rkasibha.rentabook.model.Book;
 import com.rkasibha.rentabook.service.BookService;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,10 @@ public class BookControllerUnitTest {
         mockMvc.perform(get("/books").contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(0)));
+
+        Mockito.when(bookService.getAllBooks()).thenReturn(null);
+        mockMvc.perform(get("/books"))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
@@ -88,5 +93,30 @@ public class BookControllerUnitTest {
         mockMvc.perform(get("/books/1").contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+
+        Mockito.when(bookService.getBookById(2)).thenThrow(DataNotFoundException.class);
+        mockMvc.perform(get("/books/2"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void testGetBookByTitle() throws Exception {
+        String testTitle = "Test";
+        Book foundBook = new Book();
+        foundBook.setTitle("Test");
+        BookDto returnedBookDto = new BookDto();
+        returnedBookDto.setTitle("Test");
+
+        Mockito.when(bookService.getBookByTitle(testTitle)).thenReturn(foundBook);
+        Mockito.when(entityDtoMapper.convertBookToBookDto(foundBook)).thenReturn(returnedBookDto);
+
+        mockMvc.perform(get("/books?title=Test"))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Test"));
+
+        Mockito.when(bookService.getBookByTitle("Error")).thenThrow(DataNotFoundException.class);
+        mockMvc.perform(get("/books?title=Error"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+
     }
 }

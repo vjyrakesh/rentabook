@@ -1,5 +1,6 @@
 package com.rkasibha.rentabook;
 
+import com.rkasibha.rentabook.exception.DataNotFoundException;
 import com.rkasibha.rentabook.model.Book;
 import com.rkasibha.rentabook.repository.BookRepository;
 import com.rkasibha.rentabook.service.BookService;
@@ -12,8 +13,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 public class BookServiceUnitTest {
@@ -49,12 +52,33 @@ public class BookServiceUnitTest {
     }
 
     @Test
-    public void testGetBookById() {
+    public void testGetBookById() throws DataNotFoundException {
         Book returnedBook = new Book();
         returnedBook.setId(1);
 
         Mockito.when(bookRepository.findById(1)).thenReturn(java.util.Optional.of(returnedBook));
-
         assertThat(bookService.getBookById(1).getId()).isEqualTo(1);
+
+        Mockito.when(bookRepository.findById(2)).thenThrow(NoSuchElementException.class);
+        DataNotFoundException dataNotFoundException = assertThrows(DataNotFoundException.class, () -> {
+            bookService.getBookById(2);
+        });
+        assertThat(dataNotFoundException.getMessage()).isEqualTo("Book with id: 2 not found");
+
+    }
+
+    @Test
+    public void testGetBookByTitle() throws DataNotFoundException {
+        Book returnedBook = new Book();
+        returnedBook.setTitle("Test");
+
+        Mockito.when(bookRepository.findBookByTitle("Test")).thenReturn(returnedBook);
+        assertThat(bookService.getBookByTitle("Test").getTitle()).isEqualTo("Test");
+
+        Mockito.when(bookRepository.findBookByTitle("Error")).thenReturn(null);
+        DataNotFoundException dataNotFoundException = assertThrows(DataNotFoundException.class, () -> {
+           bookService.getBookByTitle("Error");
+        });
+        assertThat(dataNotFoundException.getMessage()).isEqualTo("Book with title: Error not found");
     }
 }
