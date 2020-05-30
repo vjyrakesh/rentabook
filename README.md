@@ -37,4 +37,7 @@ Rent a book is a service which lends books to customers for a specific period of
 - Generate metrics on top 5 borrowers at a given branch.
 - Generate metrics on top 3 branches according to books lent.
 
+##### Test coverage 
+- Generate code coverage report using Jacoco using `mvn clean verify`
+
     
