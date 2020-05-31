@@ -7,6 +7,9 @@ Rent a book is a service which lends books to customers for a specific period of
 - Each branch has a collection of books to lend.
 - Every book will have one or more authors.
 - Customer can leave reviews for a book.
+- A customer does not need to be tied to a particular branch.
+- A customer will have only one membership.
+- A customer can have his membership activated/deactivated, but can have only one membership.
 - Customer should be able to 
     - check if a particular book is available at a branch. 
     - get the catalogue of all the books of a branch. 
