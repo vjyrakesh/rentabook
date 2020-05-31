@@ -5,11 +5,8 @@ import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
 
 import javax.persistence.*;
-import javax.validation.constraints.NegativeOrZero;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,9 +30,6 @@ public class Branch {
     @NotNull
     @CityConstraint
     private String city;
-
-    @OneToMany(mappedBy = "branch")
-    private List<Membership> memberships = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     private BranchAdmin admin;
@@ -86,15 +80,6 @@ public class Branch {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-
-    public List<Membership> getMemberships() {
-        return memberships;
-    }
-
-    public void setMemberships(List<Membership> memberships) {
-        this.memberships = memberships;
     }
 
     public BranchAdmin getAdmin() {

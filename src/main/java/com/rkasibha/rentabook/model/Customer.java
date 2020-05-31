@@ -4,11 +4,12 @@ import com.rkasibha.rentabook.annotation.CityConstraint;
 import com.rkasibha.rentabook.annotation.ContactNumberConstraint;
 import com.rkasibha.rentabook.annotation.CountryConstraint;
 import com.rkasibha.rentabook.annotation.EmailIdConstraint;
+import com.rkasibha.rentabook.enumeration.MembershipStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,8 +40,12 @@ public class Customer {
     @CountryConstraint
     private String country;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Membership> memberships;
+    private LocalDate memberSince;
+
+    private LocalDate memberTill;
+
+    @Enumerated(EnumType.STRING)
+    private MembershipStatus status;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<BookBranchCustomer> allocations = new HashSet<>();
@@ -104,20 +109,36 @@ public class Customer {
         this.emailId = emailId;
     }
 
-    public List<Membership> getMemberships() {
-        return memberships;
-    }
-
-    public void setMemberships(List<Membership> memberships) {
-        this.memberships = memberships;
-    }
-
     public Set<BookBranchCustomer> getAllocations() {
         return allocations;
     }
 
     public void setAllocations(Set<BookBranchCustomer> allocations) {
         this.allocations = allocations;
+    }
+
+    public LocalDate getMemberSince() {
+        return memberSince;
+    }
+
+    public void setMemberSince(LocalDate memberSince) {
+        this.memberSince = memberSince;
+    }
+
+    public LocalDate getMemberTill() {
+        return memberTill;
+    }
+
+    public void setMemberTill(LocalDate memberTill) {
+        this.memberTill = memberTill;
+    }
+
+    public MembershipStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MembershipStatus status) {
+        this.status = status;
     }
 
     @Override
@@ -127,9 +148,12 @@ public class Customer {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", contactNumber='" + contactNumber + '\'' +
+                ", emailId='" + emailId + '\'' +
                 ", city='" + city + '\'' +
                 ", country='" + country + '\'' +
-                ", emailId='" + emailId + '\'' +
+                ", memberSince=" + memberSince +
+                ", memberTill=" + memberTill +
+                ", status=" + status +
                 '}';
     }
 }
