@@ -2,8 +2,12 @@ package com.rkasibha.rentabook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rkasibha.rentabook.controller.BranchController;
+import com.rkasibha.rentabook.dto.BranchBookAddDto;
+import com.rkasibha.rentabook.dto.BranchBookDto;
 import com.rkasibha.rentabook.dto.BranchDto;
+import com.rkasibha.rentabook.model.Book;
 import com.rkasibha.rentabook.model.Branch;
+import com.rkasibha.rentabook.service.BookService;
 import com.rkasibha.rentabook.service.BranchService;
 import net.minidev.json.JSONUtil;
 
@@ -21,7 +25,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,6 +47,9 @@ public class BranchControllerUnitTest {
 
     @MockBean
     private ModelMapper mockModelMapper;
+
+    @MockBean
+    private BookService bookService;
 
     @Test
     public void testGetAllBranches() throws Exception{
@@ -102,5 +111,35 @@ public class BranchControllerUnitTest {
         mockMvc.perform(get("/branches/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(1)));
+    }
+
+    @Test
+    public void testAddBookToBranch() throws Exception {
+        BranchService spyBranchService = Mockito.spy(branchService);
+
+        Branch mockBranch = new Branch();
+        mockBranch.setId(1);
+        mockBranch.setBranchName("TestBranch");
+
+        Book mockBook = new Book();
+        mockBook.setId(1);
+        mockBook.setTitle("TestBook");
+        Mockito.doReturn(mockBranch).when(spyBranchService).getBranchById(1);
+        Mockito.when(bookService.getBookById(1)).thenReturn(mockBook);
+
+        Set<BranchBookAddDto> branchBookAddDtos = new HashSet<>();
+        BranchBookAddDto mockBranchBookAddDto = new BranchBookAddDto();
+        mockBranchBookAddDto.setId(1);
+        mockBranchBookAddDto.setQuantity(1);
+        branchBookAddDtos.add(mockBranchBookAddDto);
+
+        BranchBookDto mockBranchBookDto = new BranchBookDto();
+        mockBranchBookDto.setBooks(branchBookAddDtos);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String mockBranchBookDtoStr = mapper.writeValueAsString(mockBranchBookDto);
+
+        mockMvc.perform(post("/branches/1/books").contentType(MediaType.APPLICATION_JSON).content(mockBranchBookDtoStr))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }

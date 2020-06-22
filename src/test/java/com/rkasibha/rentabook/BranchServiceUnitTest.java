@@ -1,8 +1,15 @@
 package com.rkasibha.rentabook;
 
 
+import com.rkasibha.rentabook.dto.BranchBookAddDto;
+import com.rkasibha.rentabook.dto.BranchBookDto;
+import com.rkasibha.rentabook.exception.DataNotFoundException;
+import com.rkasibha.rentabook.model.Book;
 import com.rkasibha.rentabook.model.Branch;
+import com.rkasibha.rentabook.model.BranchBook;
+import com.rkasibha.rentabook.repository.BranchBookRepository;
 import com.rkasibha.rentabook.repository.BranchRepository;
+import com.rkasibha.rentabook.service.BookService;
 import com.rkasibha.rentabook.service.BranchService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +19,12 @@ import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 public class BranchServiceUnitTest {
@@ -24,6 +34,12 @@ public class BranchServiceUnitTest {
 
     @Mock
     private BranchRepository branchRepository;
+
+    @Mock
+    private BookService bookService;
+
+    @Mock
+    private BranchBookRepository branchBookRepository;
 
     @Test
     public void testAddNewBranch() {
@@ -38,7 +54,7 @@ public class BranchServiceUnitTest {
     }
 
     @Test
-    public void findBranchById() {
+    public void findBranchById() throws DataNotFoundException {
         Branch testBranch = new Branch();
         testBranch.setId(1);
         testBranch.setBranchName("TestBranch");
@@ -71,5 +87,34 @@ public class BranchServiceUnitTest {
         List<Branch> returnedBranches = branchService.getAllBranches();
         assertThat(returnedBranches.size()).isEqualTo(2);
 //        assertThat(returnedBranches.get(0).getId()).isEqualTo(1);
+    }
+
+    @Test
+    public void testAddBookToBranch() throws DataNotFoundException {
+        Branch mockBranch = new Branch();
+        mockBranch.setId(1);
+        mockBranch.setBranchName("TestBranch");
+        BranchService spyBranchService = Mockito.spy(branchService);
+
+        Book mockBook = new Book();
+        mockBook.setId(1);
+        mockBook.setTitle("TestBook");
+
+
+        Mockito.doReturn(mockBranch).when(spyBranchService).getBranchById(1);
+        Mockito.when(bookService.getBookById(1)).thenReturn(mockBook);
+
+        Set<BranchBookAddDto> branchBookAddDtos = new HashSet<>();
+        BranchBookAddDto mockBranchBookAddDto = new BranchBookAddDto();
+        mockBranchBookAddDto.setId(1);
+        mockBranchBookAddDto.setQuantity(1);
+        branchBookAddDtos.add(mockBranchBookAddDto);
+
+        BranchBookDto mockBranchBookDto = new BranchBookDto();
+        mockBranchBookDto.setBooks(branchBookAddDtos);
+
+        spyBranchService.addBookToBranch(1, mockBranchBookDto);
+        Mockito.verify(branchBookRepository, Mockito.atLeastOnce()).save(org.mockito.ArgumentMatchers.any());
+        
     }
 }

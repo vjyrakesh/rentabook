@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Service class for all Book related operations.
@@ -41,12 +42,11 @@ public class BookService {
      * @return Book object matching the id
      */
     public Book getBookById(Integer id) throws DataNotFoundException {
-        try {
-            return bookRepository.findById(id).get();
-        } catch (NoSuchElementException ex) {
-            DataNotFoundException dataNotFoundException = new DataNotFoundException();
-            dataNotFoundException.setMessage("Book with id: " + id + " not found");
-            throw dataNotFoundException;
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if(optionalBook.isPresent())
+            return optionalBook.get();
+        else {
+            throw new DataNotFoundException("Book with id: " + id + " not found");
         }
     }
 
@@ -57,12 +57,9 @@ public class BookService {
      */
     public Book getBookByTitle(String title) throws DataNotFoundException{
         Book foundBook = bookRepository.findBookByTitle(title);
-        if (foundBook == null) {
-            DataNotFoundException dataNotFoundException = new DataNotFoundException();
-            dataNotFoundException.setMessage("Book with title: " + title + " not found");
-            throw dataNotFoundException;
-        } else {
+        if (foundBook == null)
+            throw new DataNotFoundException("Book with title: " + title + " not found");
+        else
             return bookRepository.findBookByTitle(title);
-        }
     }
 }

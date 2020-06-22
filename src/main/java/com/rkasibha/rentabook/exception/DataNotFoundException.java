@@ -1,10 +1,15 @@
 package com.rkasibha.rentabook.exception;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+
 public class DataNotFoundException extends Exception {
+
+    @Getter
     private String message;
+
+    public DataNotFoundException(String message) {
+        super(message);
+        this.message = message;
+    }
 }

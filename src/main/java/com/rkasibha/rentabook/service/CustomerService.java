@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Service class to handle all operations related to Customer objects.
@@ -48,13 +49,10 @@ public class CustomerService {
      * @throws DataNotFoundException thrown when the Customer object with the given id is not found
      */
     public Customer getCustomerById(Integer id) throws DataNotFoundException {
-        try {
-            Customer foundCustomer = customerRepository.findById(id).get();
-            return foundCustomer;
-        } catch (NoSuchElementException ex) {
-            DataNotFoundException dataNotFoundException = new DataNotFoundException();
-            dataNotFoundException.setMessage("Customer with id: " + id + " not found");
-            throw dataNotFoundException;
-        }
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        if(optionalCustomer.isPresent())
+            return optionalCustomer.get();
+        else
+            throw new DataNotFoundException("Customer with id: " + id + " not found");
     }
 }

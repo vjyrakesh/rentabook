@@ -1,6 +1,9 @@
 package com.rkasibha.rentabook.controller;
 
+import com.rkasibha.rentabook.dto.BranchBookDto;
 import com.rkasibha.rentabook.dto.BranchDto;
+import com.rkasibha.rentabook.dto.ErrorDto;
+import com.rkasibha.rentabook.exception.DataNotFoundException;
 import com.rkasibha.rentabook.model.Branch;
 import com.rkasibha.rentabook.service.BranchService;
 import org.modelmapper.ModelMapper;
@@ -40,8 +43,32 @@ public class BranchController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<BranchDto> getBranchById(@PathVariable Integer id) {
-        BranchDto branchDto = modelMapper.map(branchService.getBranchById(id), BranchDto.class);
-        return new ResponseEntity<>(branchDto, HttpStatus.OK);
+    public ResponseEntity<?> getBranchById(@PathVariable Integer id) {
+        try {
+            BranchDto branchDto = modelMapper.map(branchService.getBranchById(id), BranchDto.class);
+            return new ResponseEntity<>(branchDto, HttpStatus.OK);
+        } catch (DataNotFoundException ex) {
+            ErrorDto errorDto = new ErrorDto();
+            errorDto.setError(ex.getMessage());
+            return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Add books to a branch.
+     * @param id id of the branch to which the books have to be added
+     * @param branchBookDto JSON object with list of book details to be added
+     * @return ResponseEntity with 204 No Content if successful, 404 Not Found if branch is not found.
+     */
+    @PostMapping(value = "/{id}/books")
+    public ResponseEntity<?> addBooksToBranch(@PathVariable Integer id, @RequestBody BranchBookDto branchBookDto) {
+        try {
+            branchService.addBookToBranch(id, branchBookDto);
+            return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
+        } catch (DataNotFoundException ex) {
+            ErrorDto errorDto = new ErrorDto();
+            errorDto.setError(ex.getMessage());
+            return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+        }
     }
 }
