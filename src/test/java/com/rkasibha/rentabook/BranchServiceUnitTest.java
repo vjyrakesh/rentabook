@@ -7,6 +7,7 @@ import com.rkasibha.rentabook.exception.DataNotFoundException;
 import com.rkasibha.rentabook.model.Book;
 import com.rkasibha.rentabook.model.Branch;
 import com.rkasibha.rentabook.model.BranchBook;
+import com.rkasibha.rentabook.model.BranchBookId;
 import com.rkasibha.rentabook.repository.BranchBookRepository;
 import com.rkasibha.rentabook.repository.BranchRepository;
 import com.rkasibha.rentabook.service.BookService;
@@ -117,4 +118,30 @@ public class BranchServiceUnitTest {
         Mockito.verify(branchBookRepository, Mockito.atLeastOnce()).save(org.mockito.ArgumentMatchers.any());
         
     }
+
+    @Test
+    public void testGetBranchBooks() throws DataNotFoundException {
+        Branch mockBranch = new Branch();
+        mockBranch.setId(1);
+        Book mockBook = new Book();
+        mockBook.setId(1);
+        BranchBook mockBranchBook = new BranchBook();
+        mockBranchBook.setBook(mockBook);
+        mockBranchBook.setBranch(mockBranch);
+        mockBranchBook.setBranchBookId(new BranchBookId(mockBranch.getId(), mockBook.getId()));
+        Set<BranchBook> mockBranchBookSet = new HashSet<>();
+        mockBranchBookSet.add(mockBranchBook);
+        mockBranch.setCatalog(mockBranchBookSet);
+
+        Mockito.when(branchRepository.findById(1)).thenReturn(java.util.Optional.of(mockBranch));
+
+        assertThat(branchService.getBranchBooks(1).size()).isEqualTo(1);
+
+        Mockito.when(branchRepository.findById(2)).thenReturn(java.util.Optional.empty());
+        DataNotFoundException ex = assertThrows(DataNotFoundException.class, () -> {
+            branchService.getBranchBooks(2);
+        });
+        assertThat(ex.getMessage()).isEqualTo("Branch with id: 2 not found");
+    }
+
 }

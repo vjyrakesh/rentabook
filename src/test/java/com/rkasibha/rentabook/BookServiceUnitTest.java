@@ -59,7 +59,7 @@ public class BookServiceUnitTest {
         Mockito.when(bookRepository.findById(1)).thenReturn(java.util.Optional.of(returnedBook));
         assertThat(bookService.getBookById(1).getId()).isEqualTo(1);
 
-        Mockito.when(bookRepository.findById(2)).thenThrow(NoSuchElementException.class);
+        Mockito.when(bookRepository.findById(2)).thenReturn(java.util.Optional.empty());
         DataNotFoundException dataNotFoundException = assertThrows(DataNotFoundException.class, () -> {
             bookService.getBookById(2);
         });

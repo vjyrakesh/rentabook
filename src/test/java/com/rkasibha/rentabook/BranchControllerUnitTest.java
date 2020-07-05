@@ -2,11 +2,16 @@ package com.rkasibha.rentabook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rkasibha.rentabook.controller.BranchController;
+import com.rkasibha.rentabook.controller.EntityDtoMapper;
+import com.rkasibha.rentabook.dto.BookDto;
 import com.rkasibha.rentabook.dto.BranchBookAddDto;
 import com.rkasibha.rentabook.dto.BranchBookDto;
 import com.rkasibha.rentabook.dto.BranchDto;
+import com.rkasibha.rentabook.exception.DataNotFoundException;
 import com.rkasibha.rentabook.model.Book;
 import com.rkasibha.rentabook.model.Branch;
+import com.rkasibha.rentabook.model.BranchBook;
+import com.rkasibha.rentabook.model.BranchBookId;
 import com.rkasibha.rentabook.service.BookService;
 import com.rkasibha.rentabook.service.BranchService;
 import net.minidev.json.JSONUtil;
@@ -50,6 +55,9 @@ public class BranchControllerUnitTest {
 
     @MockBean
     private BookService bookService;
+
+    @MockBean
+    private EntityDtoMapper entityDtoMapper;
 
     @Test
     public void testGetAllBranches() throws Exception{
@@ -141,5 +149,32 @@ public class BranchControllerUnitTest {
 
         mockMvc.perform(post("/branches/1/books").contentType(MediaType.APPLICATION_JSON).content(mockBranchBookDtoStr))
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void testGetBranchBooks() throws Exception {
+        Branch mockBranch = new Branch();
+        mockBranch.setId(1);
+        Book mockBook = new Book();
+        mockBook.setId(1);
+        BranchBook mockBranchBook = new BranchBook();
+        mockBranchBook.setBook(mockBook);
+        mockBranchBook.setBranch(mockBranch);
+        mockBranchBook.setBranchBookId(new BranchBookId(mockBranch.getId(), mockBook.getId()));
+        Set<BranchBook> mockBranchBookSet = new HashSet<>();
+        mockBranchBookSet.add(mockBranchBook);
+        mockBranch.setCatalog(mockBranchBookSet);
+        BookDto mockBookDto = new BookDto();
+        mockBookDto.setId(1);
+
+        Mockito.when(branchService.getBranchBooks(1)).thenReturn(mockBranchBookSet);
+        Mockito.when(entityDtoMapper.convertBookToBookDto(mockBook)).thenReturn(mockBookDto);
+
+        mockMvc.perform(get("/branches/1/books").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.when(branchService.getBranchBooks(2)).thenThrow(DataNotFoundException.class);
+        mockMvc.perform(get("/branches/2/books").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

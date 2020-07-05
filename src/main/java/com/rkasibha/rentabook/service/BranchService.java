@@ -75,4 +75,19 @@ public class BranchService {
 
         }
     }
+
+    /**
+     * Get list of all books for a given branch specified by the branch id.
+     * @param branchId Id of the branch for which the books have to be fetched
+     * @return Set of all books belonging to the branch
+     * @throws DataNotFoundException raised when the requested branch is not found
+     */
+    public Set<BranchBook> getBranchBooks(Integer branchId) throws DataNotFoundException {
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+        if (optionalBranch.isPresent()) {
+            return optionalBranch.get().getCatalog();
+        } else {
+            throw new DataNotFoundException("Branch with id: " + branchId + " not found");
+        }
+    }
 }

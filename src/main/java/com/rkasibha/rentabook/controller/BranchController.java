@@ -1,10 +1,12 @@
 package com.rkasibha.rentabook.controller;
 
 import com.rkasibha.rentabook.dto.BranchBookDto;
+import com.rkasibha.rentabook.dto.BranchBookFetchDto;
 import com.rkasibha.rentabook.dto.BranchDto;
 import com.rkasibha.rentabook.dto.ErrorDto;
 import com.rkasibha.rentabook.exception.DataNotFoundException;
 import com.rkasibha.rentabook.model.Branch;
+import com.rkasibha.rentabook.model.BranchBook;
 import com.rkasibha.rentabook.service.BranchService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/branches")
@@ -24,6 +27,9 @@ public class BranchController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private EntityDtoMapper entityDtoMapper;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<BranchDto>> getAllBranches() {
@@ -69,6 +75,27 @@ public class BranchController {
             ErrorDto errorDto = new ErrorDto();
             errorDto.setError(ex.getMessage());
             return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Get list of all books in a branch.
+     * @param id id of the branch for which the books have to be fetched
+     * @return ResponseEntity with list of Book objects along with their quantity, 404 if not branch not found
+     */
+    @GetMapping(value = "/{id}/books")
+    public ResponseEntity<?> getBranchBooks(@PathVariable Integer id) {
+        try {
+            Set<BranchBook> branchBooks = branchService.getBranchBooks(id);
+            List<BranchBookFetchDto> branchBookFetchDtos = new ArrayList<>();
+            for (BranchBook branchBook : branchBooks) {
+                branchBookFetchDtos.add(new BranchBookFetchDto(entityDtoMapper.convertBookToBookDto(branchBook.getBook()), branchBook.getQuantity()));
+            }
+            return new ResponseEntity<>(branchBookFetchDtos, HttpStatus.OK);
+        } catch(DataNotFoundException ex) {
+            ErrorDto errorDto = new ErrorDto();
+            errorDto.setError(ex.getMessage());
+            return new ResponseEntity<ErrorDto>(errorDto, HttpStatus.NOT_FOUND);
         }
     }
 }

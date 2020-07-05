@@ -106,4 +106,34 @@ public class BranchControllerIntegrationTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
 
     }
+
+    @Test
+    public void testGetBranchBooks() throws Exception {
+        BranchBookAddDto branchBookAddDto = new BranchBookAddDto();
+        branchBookAddDto.setId(1);
+        branchBookAddDto.setQuantity(1);
+        branchBookAddDto.setTitle("Test");
+        BranchBookDto branchBookDto = new BranchBookDto();
+        Set<BranchBookAddDto> branchBookAddDtos = new HashSet<>();
+        branchBookAddDtos.add(branchBookAddDto);
+        branchBookDto.setBooks(branchBookAddDtos);
+
+        Branch branch = new Branch();
+        branch.setId(1);
+        branch.setBranchName("TestBranch");
+        branch.setCity("Test");
+        branch.setEmailId("test@abc.com");
+        branch.setContactNumber("+9199293930");
+        branchService.addBranch(branch);
+
+        Book book = new Book();
+        book.setId(1);
+        book.setTitle("Test");
+        bookService.addBook(book);
+
+        branchService.addBookToBranch(1, branchBookDto);
+
+        mockMvc.perform(get("/branches/1/books").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
